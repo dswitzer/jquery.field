@@ -1,0 +1,193 @@
+<!--
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+-->
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>Test - Clear Hashes</title>
+
+	<!---// load jQuery v1.3.1 from the GoogleAPIs CDN //--->
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js"></script>
+
+	<!--// load jQuery Plug-ins //-->
+	<script type="text/javascript" src="../src/jquery.field.js"></script>
+
+	<script type="text/javascript">
+	if( !window.console ){
+		(function (w){
+			window.console = {
+				log: function (){}
+				, dir: function (){}
+			};
+		})(window || {});
+	}
+
+	$(document).ready(
+		function (){
+			// update the plug-in version
+			$("#idPluginVersion").text($.Field.version);
+
+		}
+	);
+	</script>
+
+	<style type="text/css">
+		#testForm {
+			width: 800px;
+		}
+
+		code {
+			background-color: #e0e0e0;
+		}
+
+		#formContent p {
+			clear: both;
+			min-height: 20px;
+		}
+
+		#formContent code {
+			width: 270px;
+			float: left;
+			background-color: #ffffff;
+		}
+
+		#idCheckboxMsg {
+			color: red;
+			font-weight: bold;
+		}
+	</style>
+
+	<script type="text/javascript">
+		jQuery(function (){
+			var $form = $("#frmTest"), defaults = $form.formHash();
+
+			$("input.reset").bind("click", function (e){
+				e.preventDefault();
+				$form.formHash(defaults);
+			});
+
+			var tests = {
+				"text & radio (no clear)": [{f_text: "Changed 1!", f_radio: "4"}]
+				, "text & radio (clear)": [{f_text: "Changed 2!", f_radio: "2"}, true]
+				, "text & radio (clear == false)": [{f_text: "Changed 3!", f_radio: "3"}, false]
+			};
+
+			function doTest(method, args){
+				return (function (e){
+					e.preventDefault();
+					if( method == "formHash" ){
+						var o = $form;
+						o.formHash.apply(o, args);
+					} else {
+						var o = $form.find(":input");
+						o.fieldHash.apply(o, args);
+					}
+				});
+			}
+
+			var $t = $("#test-buttons");
+
+			$.each(["formHash", "fieldHash"], function (i, method){
+				var $div = $('<div/>');
+				for( var key in tests ){
+					$('<input type="button" value="' + method + ': ' + key + '" />')
+						.bind("click", doTest(method, tests[key]))
+						.appendTo($div);
+				}
+				$div.appendTo($t);
+			});
+		});
+	</script>
+
+</head>
+
+<body>
+<h1>
+	Test - Clear Hash (v<span id="idPluginVersion">0.7</span>)
+</h1>
+
+<div>
+	<input type="button" value="Reset" class="reset" />
+</div>
+
+<div id="test-buttons">
+</div>
+
+<form id="frmTest" onsubmit="return false;">
+
+	<p>
+		Text field:
+		<input type="text" name="f_text" value="text field" />
+	</p>
+
+	<p>
+		Password field:
+		<input type="password" name="f_password" value="password" />
+	</p>
+
+	<p>
+		Hidden field:
+		<input type="hidden" name="f_hidden" value="I'm a hidden field hidden" />
+	</p>
+
+	<p>
+		Radio field:
+		<input type="radio" name="f_radio" id="f_radio_1" value="1" />
+		<label for="f_radio_1">Option 1</label>
+		<input type="radio" name="f_radio" id="f_radio_2" value="2" />
+		<label for="f_radio_2">Option 2</label>
+		<input type="radio" name="f_radio" id="f_radio_3" value="3" />
+		<label for="f_radio_3">Option 3</label>
+		<input type="radio" name="f_radio" id="f_radio_4" value="4" />
+		<label for="f_radio_4">Option 4</label>
+		<input type="radio" name="f_radio" id="f_radio_5" value="5" />
+		<label for="f_radio_5">Option 5</label>
+	</p>
+
+	<p>
+		Checkbox field:
+		<input type="checkbox" name="f_checkbox" id="f_checkbox_1" value="1" />
+		<label for="f_checkbox_1">Option 1</label>
+		<input type="checkbox" name="f_checkbox" id="f_checkbox_2" value="2" />
+		<label for="f_checkbox_2">Option 2</label>
+		<input type="checkbox" name="f_checkbox" id="f_checkbox_3" value="3" />
+		<label for="f_checkbox_3">Option 3</label>
+		<input type="checkbox" name="f_checkbox" id="f_checkbox_4" value="4" />
+		<label for="f_checkbox_4">Option 4</label>
+		<input type="checkbox" name="f_checkbox" id="f_checkbox_5" value="5" />
+		<label for="f_checkbox_5">Option 5</label>
+	</p>
+
+	<p>
+		Select (single) field:
+		<select name="f_select_one">
+			<option value=""></option>
+			<option value="1">Option Value: 1</option>
+			<option value="2">Option Value: 2</option>
+			<option value="3">Option Value: 3</option>
+			<option value="4">Option Value: 4</option>
+			<option value="5">Option Value: 5</option>
+		</select>
+	</p>
+
+	<p>
+		Select (multiple) field:
+		<select name="f_select_multiple" multiple="true" size="5">
+			<option value="1">Option Value: 1</option>
+			<option value="2">Option Value: 2</option>
+			<option value="3">Option Value: 3</option>
+			<option value="4">Option Value: 4</option>
+			<option value="5">Option Value: 5</option>
+		</select>
+	</p>
+
+	<p>
+		Textarea field:
+		<textarea name="f_textarea" cols="40" rows="8">Here is some text!</textarea>
+	</p>
+
+</form>
+
+</body>
+</html>
