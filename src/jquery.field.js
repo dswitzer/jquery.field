@@ -201,7 +201,7 @@
 		var v = [];
 
 		jq.each(
-			function (lc){
+			function (){
 				// get the current type
 				var t = getType(this);
 
@@ -273,18 +273,18 @@
 	// the setValue() method -- does *not* break the chain
 	var setValue = function(jq, v){
 		jq.each(
-			function (lc){
+			function (){
 				var t = getType(this), x;
 
 				switch( t ){
 					case "checkbox": case "radio":
-						if( valueExists(v, this.value) ) this.checked = true;
-						else this.checked = false;
+						this.checked = valueExists(v, this.value);
 					break;
 
 					case "select":
 						var bSelectOne = (this.type == "select-one");
 						var bKeepLooking = true; // if select-one type, then only select the first value found
+						var bSelectItem;
 						// loop through all element in the array for this field
 						for( var i=0; i < this.length; i++ ){
 							x = getOptionVal(this[i]);
@@ -358,7 +358,7 @@
 					if( !n || fields[n] ) continue;
 
 					// create a jquery object to the current named form elements (for fields containing apostrophe's, escape them)
-					var $el = $(el.form[n]);
+					$el = $(el.form[n]);
 
 					// if we're getting the values, get them now
 					if( isGet ){
@@ -630,7 +630,7 @@
 		var opt = jQuery.extend(
 			(limit && limit.constructor == Object ? limit : {
 					limit: limit
-				, onsuccess: function (limit){ return true; }
+				, onsuccess: function (){ return true; }
 				, onfailure: function (limit){ alert("You can only select a maximum a of " + limit + " items."); return false; }
 			})
 			, options);
@@ -698,7 +698,6 @@
 			function (){
 				// only perform this action on checkboxes
 				if( this.type != "checkbox" ) return false;
-				var el = this;
 
 				var updateLastCheckbox = function (e){
 					iLastSelection = self.index(e.target);
@@ -709,7 +708,7 @@
 					// run the callback for the clicked item
 					if( bCallback ) opt.click.apply(this, [e, bSetChecked]);
 					// if we don't detect the keypress, exit function
-					if( !e[opt.bind] ) return;
+					if( !e[opt.bind] ) return false;
 					
 					// loop through the items in the selected range
 					for( var i=low; i < high; i++ ){
@@ -744,11 +743,10 @@
 			case "select": case "select-one": case "select-multiple":
 				t = "select";
 				break;
-			case "text": case "hidden": case "textarea": case "password": case "button": case "submit": case "submit": case "file":
+			case "text": case "hidden": case "textarea": case "password": case "button": case "submit": case "file":
 				t = "text";
 				break;
 			case "checkbox": case "radio":
-				t = t;
 				break;
 		}
 		return t;
