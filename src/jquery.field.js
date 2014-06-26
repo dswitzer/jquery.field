@@ -7,7 +7,7 @@
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
- * Version: 0.9.6
+ * Version: 0.9.7
  *
  * NOTES: The getValue() and setValue() methods are designed to be
  * executed on single field (i.e. any field that would share the same
@@ -15,6 +15,10 @@
  * elements, etc.)
  *
  * Revision History
+ * v0.9.7
+ * - Added default as type for getValue for rudimentary HTML5 input type
+ *   support
+ *
  * v0.9.6
  * - Added clear argument to fieldHash() and formHash() method for resetting
  *   values not in the supplied hash map; default is still to ignore values
@@ -225,6 +229,12 @@
 					case "text":
 						v.push(this.value);
 					break;
+
+					default:
+						if( typeof this.value !== "undefined" ){
+							v.push(this.value);
+						}
+					break;
 				}
 			}
 		);
@@ -297,6 +307,10 @@
 					break;
 
 					case "text":
+						this.value = v.join(defaults.delimiter);
+					break;
+
+					default:
 						this.value = v.join(defaults.delimiter);
 					break;
 				}
